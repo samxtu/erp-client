@@ -1,0 +1,7 @@
+fragment BooleanResponse on BooleanResponse {
+  status
+  error {
+    target
+    message
+  }
+}

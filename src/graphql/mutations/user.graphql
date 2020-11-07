@@ -1,0 +1,28 @@
+mutation forgotPassword($email: String!) {
+  forgotPassword(email: $email) {
+    ...BooleanResponse
+  }
+}
+mutation Login($params: EmailPasswordArgs!) {
+  login(params: $params) {
+    user {
+      ...Me
+    }
+    error {
+      ...Error
+    }
+  }
+}
+mutation Logout {
+  logout
+}
+mutation resetPassword($token: String!, $newPassword: String!) {
+  resetPassword(token: $token, newPassword: $newPassword) {
+    user {
+      ...Me
+    }
+    error {
+      ...Error
+    }
+  }
+}

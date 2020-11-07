@@ -1,0 +1,15 @@
+mutation addRegion($name: String!) {
+  addRegion(name: $name) {
+    ...BooleanResponse
+  }
+}
+mutation editRegion($name: String!, $id: Float!) {
+  editRegion(name: $name, id: $id) {
+    ...BooleanResponse
+  }
+}
+mutation deleteRegion($id: Float!) {
+  deleteRegion(id: $id) {
+    ...BooleanResponse
+  }
+}

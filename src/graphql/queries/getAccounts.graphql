@@ -1,0 +1,12 @@
+query getAccounts($branch: Float!) {
+  getAccounts(branch: $branch) {
+    id
+    name
+    branch {
+      id
+      name
+    }
+    number
+    balance
+  }
+}

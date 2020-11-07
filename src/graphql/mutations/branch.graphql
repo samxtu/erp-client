@@ -1,0 +1,15 @@
+mutation addBranch($args: BranchInput!) {
+  addBranch(args: $args) {
+    ...BooleanResponse
+  }
+}
+mutation editBranch($args: BranchInput!, $id: Float!) {
+  editBranch(args: $args, id: $id) {
+    ...BooleanResponse
+  }
+}
+mutation deleteBranch($id: Float!) {
+  deleteBranch(id: $id) {
+    ...BooleanResponse
+  }
+}

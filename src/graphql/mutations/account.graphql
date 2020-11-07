@@ -1,0 +1,15 @@
+mutation addAccount($args: AccountInput!) {
+  addAccount(args: $args) {
+    ...BooleanResponse
+  }
+}
+mutation editAccount($args: AccountInput!, $id: Float!) {
+  editAccount(args: $args, id: $id) {
+    ...BooleanResponse
+  }
+}
+mutation deleteAccount($id: Float!) {
+  deleteAccount(id: $id) {
+    ...BooleanResponse
+  }
+}

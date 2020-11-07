@@ -1,0 +1,15 @@
+mutation addRole($name: String!) {
+  addRole(name: $name) {
+    ...BooleanResponse
+  }
+}
+mutation editRole($name: String!, $id: Float!) {
+  editRole(name: $name, id: $id) {
+    ...BooleanResponse
+  }
+}
+mutation deleteRole($id: Float!) {
+  deleteRole(id: $id) {
+    ...BooleanResponse
+  }
+}
