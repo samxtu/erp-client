@@ -1,0 +1,16 @@
+query getAssets($branch: Float) {
+  getAssets(branch: $branch) {
+    id
+    name
+    code
+    condition
+    details
+    branch {
+      id
+      name
+    }
+    receivedExpenses {
+      ammount
+    }
+  }
+}

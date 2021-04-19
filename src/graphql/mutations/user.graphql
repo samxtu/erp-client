@@ -26,3 +26,12 @@ mutation resetPassword($token: String!, $newPassword: String!) {
     }
   }
 }
+
+mutation register($params: RegisterArgs!) {
+  register(params: $params) {
+    status
+    error {
+      ...Error
+    }
+  }
+}

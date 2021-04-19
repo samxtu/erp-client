@@ -1,0 +1,17 @@
+mutation addROR($args: RORInput!) {
+  addROR(args: $args) {
+    ...BooleanResponse
+  }
+}
+
+mutation editROR($id: Float!, $args: RORInput!) {
+  editROR(id: $id, args: $args) {
+    ...BooleanResponse
+  }
+}
+
+mutation deleteROR($id: Float!) {
+  deleteROR(id: $id) {
+    ...BooleanResponse
+  }
+}

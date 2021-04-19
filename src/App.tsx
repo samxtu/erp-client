@@ -13,34 +13,37 @@ import Regions from "./pages/regions";
 import Accounts from "./pages/accounts";
 import Roles from "./pages/roles";
 import Branches from "./pages/branches";
+import Assets from "./pages/assets";
+import ROR from "./pages/ror";
 
 function App() {
   return (
     <div className="App">
       <Provider value={client}>
         <Router>
-            <Switch>
-              <AuthRoute exact path="/" component={home} />
-              <AuthRoute exact path="/regions" component={Regions} />
-              <AuthRoute exact path="/accounts" component={Accounts} />
-              <AuthRoute exact path="/roles" component={Roles} />
-              <AuthRoute exact path="/branches" component={Branches} />
-              {/* <AuthRoute exact path="/" component={home} />
+          <Switch>
             <AuthRoute exact path="/" component={home} />
+            <AuthRoute exact path="/regions" component={Regions} />
+            <AuthRoute exact path="/accounts" component={Accounts} />
+            <AuthRoute exact path="/roles" component={Roles} />
+            <AuthRoute exact path="/branches" component={Branches} />
+            <AuthRoute exact path="/assets" component={Assets} />
+            <AuthRoute exact path="/ror" component={ROR} />
+            {/* <AuthRoute exact path="/" component={home} />
             <AuthRoute exact path="/" component={home} />
             <AuthRoute exact path="/" component={home} /> */}
-              <UnAuthRoute exact path="/login" component={login} />
-              <UnAuthRoute
-                exact
-                path="/forgot-password"
-                component={forgot_password}
-              />
-              <UnAuthRoute
-                exact
-                path="/reset-password"
-                component={reset_password}
-              />
-            </Switch>
+            <UnAuthRoute exact path="/login" component={login} />
+            <UnAuthRoute
+              exact
+              path="/forgot-password"
+              component={forgot_password}
+            />
+            <UnAuthRoute
+              exact
+              path="/reset-password"
+              component={reset_password}
+            />
+          </Switch>
         </Router>
       </Provider>
     </div>

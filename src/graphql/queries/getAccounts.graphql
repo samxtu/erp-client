@@ -1,4 +1,4 @@
-query getAccounts($branch: Float!) {
+query getAccounts($branch: Float) {
   getAccounts(branch: $branch) {
     id
     name

@@ -1,0 +1,100 @@
+query getUsers($employee: Boolean) {
+  getUsers(employee: $employee) {
+    ...Me
+    maxCredit
+    creditDays
+    credit
+    balance
+    salary
+  }
+}
+
+query getUser($id: Float!) {
+  getUser(id: $id) {
+    ...Me
+    maxCredit
+    creditDays
+    credit
+    balance
+    salary
+    payments {
+      id
+      paymentDate
+      ammount
+      payer {
+        id
+        name
+      }
+      collector {
+        id
+        name
+      }
+    }
+    suppliedPurchases {
+      id
+      product {
+        id
+        name
+      }
+      purchaseDate
+      quantity
+      purchasePrice
+    }
+    collections {
+      id
+      paymentDate
+      ammount
+      payer {
+        id
+        name
+      }
+    }
+    incentives {
+      id
+      product {
+        id
+        name
+      }
+      quantity
+      incentivePrice
+    }
+    servedSales {
+      id
+      saleDate
+      product {
+        id
+        name
+      }
+      quantity
+      pieceQuantity
+      sellingPrice
+      pieceSellingPrice
+      payed
+    }
+    initiatedSales {
+      id
+      saleDate
+      product {
+        id
+        name
+      }
+      quantity
+      pieceQuantity
+      sellingPrice
+      pieceSellingPrice
+      payed
+    }
+    authorizedExpenses {
+      id
+      expenseDate
+      type
+      ammount
+    }
+    receivedExpenses {
+      id
+      expenseDate
+      type
+      ammount
+    }
+  }
+}

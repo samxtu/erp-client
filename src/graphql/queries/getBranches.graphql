@@ -7,5 +7,6 @@ query getBranches {
       id
       name
     }
+    street
   }
 }

@@ -54,7 +54,7 @@ export type QueryGetBranchArgs = {
 
 
 export type QueryGetUsersArgs = {
-  role: Scalars['Float'];
+  employee?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -64,7 +64,7 @@ export type QueryGetUserArgs = {
 
 
 export type QueryGetAccountsArgs = {
-  branch: Scalars['Float'];
+  branch?: Maybe<Scalars['Float']>;
 };
 
 
@@ -74,7 +74,7 @@ export type QueryGetAccountArgs = {
 
 
 export type QueryGetAssetsArgs = {
-  branch: Scalars['Float'];
+  branch?: Maybe<Scalars['Float']>;
 };
 
 
@@ -204,6 +204,7 @@ export type User = {
   credit: Scalars['Boolean'];
   balance: Scalars['Float'];
   salary: Scalars['Float'];
+  employee: Scalars['Boolean'];
   roleId: Scalars['Float'];
   role: Role;
   branchId: Scalars['Float'];
@@ -378,6 +379,7 @@ export type Ror = {
   name: Scalars['String'];
   buying: Scalars['Float'];
   selling: Scalars['Float'];
+  pieces?: Maybe<Scalars['Float']>;
   creatorId: Scalars['Float'];
   creator: User;
 };
@@ -771,6 +773,7 @@ export type RegisterArgs = {
   maxCredit: Scalars['Float'];
   creditDays: Scalars['Float'];
   credit: Scalars['Boolean'];
+  employee: Scalars['Boolean'];
   balance: Scalars['Float'];
   salary: Scalars['Float'];
   roleId: Scalars['Float'];
@@ -873,6 +876,7 @@ export type PurchaseInput = {
 export type RorInput = {
   name: Scalars['String'];
   buying: Scalars['Float'];
+  pieces?: Maybe<Scalars['Float']>;
   selling: Scalars['Float'];
 };
 
@@ -950,6 +954,46 @@ export type DeleteAccountMutationVariables = Exact<{
 export type DeleteAccountMutation = (
   { __typename?: 'Mutation' }
   & { deleteAccount: (
+    { __typename?: 'BooleanResponse' }
+    & BooleanResponseFragment
+  ) }
+);
+
+export type AddAssetMutationVariables = Exact<{
+  args: AssetInput;
+}>;
+
+
+export type AddAssetMutation = (
+  { __typename?: 'Mutation' }
+  & { addAsset: (
+    { __typename?: 'BooleanResponse' }
+    & BooleanResponseFragment
+  ) }
+);
+
+export type EditAssetMutationVariables = Exact<{
+  args: AssetInput;
+  id: Scalars['Float'];
+}>;
+
+
+export type EditAssetMutation = (
+  { __typename?: 'Mutation' }
+  & { editAsset: (
+    { __typename?: 'BooleanResponse' }
+    & BooleanResponseFragment
+  ) }
+);
+
+export type DeleteAssetMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type DeleteAssetMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteAsset: (
     { __typename?: 'BooleanResponse' }
     & BooleanResponseFragment
   ) }
@@ -1075,6 +1119,46 @@ export type DeleteRoleMutation = (
   ) }
 );
 
+export type AddRorMutationVariables = Exact<{
+  args: RorInput;
+}>;
+
+
+export type AddRorMutation = (
+  { __typename?: 'Mutation' }
+  & { addROR: (
+    { __typename?: 'BooleanResponse' }
+    & BooleanResponseFragment
+  ) }
+);
+
+export type EditRorMutationVariables = Exact<{
+  id: Scalars['Float'];
+  args: RorInput;
+}>;
+
+
+export type EditRorMutation = (
+  { __typename?: 'Mutation' }
+  & { editROR: (
+    { __typename?: 'BooleanResponse' }
+    & BooleanResponseFragment
+  ) }
+);
+
+export type DeleteRorMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type DeleteRorMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteROR: (
+    { __typename?: 'BooleanResponse' }
+    & BooleanResponseFragment
+  ) }
+);
+
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -1136,7 +1220,7 @@ export type ResetPasswordMutation = (
 );
 
 export type GetAccountsQueryVariables = Exact<{
-  branch: Scalars['Float'];
+  branch?: Maybe<Scalars['Float']>;
 }>;
 
 
@@ -1152,6 +1236,26 @@ export type GetAccountsQuery = (
   )> }
 );
 
+export type GetAssetsQueryVariables = Exact<{
+  branch?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type GetAssetsQuery = (
+  { __typename?: 'Query' }
+  & { getAssets: Array<(
+    { __typename?: 'Asset' }
+    & Pick<Asset, 'id' | 'name' | 'code' | 'condition' | 'details'>
+    & { branch: (
+      { __typename?: 'Branch' }
+      & Pick<Branch, 'id' | 'name'>
+    ), receivedExpenses: Array<(
+      { __typename?: 'Expense' }
+      & Pick<Expense, 'ammount'>
+    )> }
+  )> }
+);
+
 export type GetBranchesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1159,11 +1263,24 @@ export type GetBranchesQuery = (
   { __typename?: 'Query' }
   & { getBranches: Array<(
     { __typename?: 'Branch' }
-    & Pick<Branch, 'id' | 'name' | 'phone'>
+    & Pick<Branch, 'id' | 'name' | 'phone' | 'street'>
     & { region: (
       { __typename?: 'Region' }
       & Pick<Region, 'id' | 'name'>
     ) }
+  )> }
+);
+
+export type GetRorsQueryVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type GetRorsQuery = (
+  { __typename?: 'Query' }
+  & { getRORs: Array<(
+    { __typename?: 'ROR' }
+    & Pick<Ror, 'id' | 'name' | 'buying' | 'pieces' | 'selling'>
   )> }
 );
 
@@ -1186,6 +1303,20 @@ export type GetRolesQuery = (
   & { getRoles: Array<(
     { __typename?: 'Role' }
     & Pick<Role, 'id' | 'name'>
+  )> }
+);
+
+export type GetUsersQueryVariables = Exact<{
+  employee?: Maybe<Scalars['Boolean']>;
+}>;
+
+
+export type GetUsersQuery = (
+  { __typename?: 'Query' }
+  & { getUsers: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'maxCredit' | 'creditDays' | 'credit' | 'balance' | 'salary'>
+    & MeFragment
   )> }
 );
 
@@ -1264,6 +1395,39 @@ export const DeleteAccountDocument = gql`
 
 export function useDeleteAccountMutation() {
   return Urql.useMutation<DeleteAccountMutation, DeleteAccountMutationVariables>(DeleteAccountDocument);
+};
+export const AddAssetDocument = gql`
+    mutation addAsset($args: AssetInput!) {
+  addAsset(args: $args) {
+    ...BooleanResponse
+  }
+}
+    ${BooleanResponseFragmentDoc}`;
+
+export function useAddAssetMutation() {
+  return Urql.useMutation<AddAssetMutation, AddAssetMutationVariables>(AddAssetDocument);
+};
+export const EditAssetDocument = gql`
+    mutation editAsset($args: AssetInput!, $id: Float!) {
+  editAsset(args: $args, id: $id) {
+    ...BooleanResponse
+  }
+}
+    ${BooleanResponseFragmentDoc}`;
+
+export function useEditAssetMutation() {
+  return Urql.useMutation<EditAssetMutation, EditAssetMutationVariables>(EditAssetDocument);
+};
+export const DeleteAssetDocument = gql`
+    mutation deleteAsset($id: Float!) {
+  deleteAsset(id: $id) {
+    ...BooleanResponse
+  }
+}
+    ${BooleanResponseFragmentDoc}`;
+
+export function useDeleteAssetMutation() {
+  return Urql.useMutation<DeleteAssetMutation, DeleteAssetMutationVariables>(DeleteAssetDocument);
 };
 export const AddBranchDocument = gql`
     mutation addBranch($args: BranchInput!) {
@@ -1364,6 +1528,39 @@ export const DeleteRoleDocument = gql`
 export function useDeleteRoleMutation() {
   return Urql.useMutation<DeleteRoleMutation, DeleteRoleMutationVariables>(DeleteRoleDocument);
 };
+export const AddRorDocument = gql`
+    mutation addROR($args: RORInput!) {
+  addROR(args: $args) {
+    ...BooleanResponse
+  }
+}
+    ${BooleanResponseFragmentDoc}`;
+
+export function useAddRorMutation() {
+  return Urql.useMutation<AddRorMutation, AddRorMutationVariables>(AddRorDocument);
+};
+export const EditRorDocument = gql`
+    mutation editROR($id: Float!, $args: RORInput!) {
+  editROR(id: $id, args: $args) {
+    ...BooleanResponse
+  }
+}
+    ${BooleanResponseFragmentDoc}`;
+
+export function useEditRorMutation() {
+  return Urql.useMutation<EditRorMutation, EditRorMutationVariables>(EditRorDocument);
+};
+export const DeleteRorDocument = gql`
+    mutation deleteROR($id: Float!) {
+  deleteROR(id: $id) {
+    ...BooleanResponse
+  }
+}
+    ${BooleanResponseFragmentDoc}`;
+
+export function useDeleteRorMutation() {
+  return Urql.useMutation<DeleteRorMutation, DeleteRorMutationVariables>(DeleteRorDocument);
+};
 export const ForgotPasswordDocument = gql`
     mutation forgotPassword($email: String!) {
   forgotPassword(email: $email) {
@@ -1419,7 +1616,7 @@ export function useResetPasswordMutation() {
   return Urql.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument);
 };
 export const GetAccountsDocument = gql`
-    query getAccounts($branch: Float!) {
+    query getAccounts($branch: Float) {
   getAccounts(branch: $branch) {
     id
     name
@@ -1436,6 +1633,28 @@ export const GetAccountsDocument = gql`
 export function useGetAccountsQuery(options: Omit<Urql.UseQueryArgs<GetAccountsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetAccountsQuery>({ query: GetAccountsDocument, ...options });
 };
+export const GetAssetsDocument = gql`
+    query getAssets($branch: Float) {
+  getAssets(branch: $branch) {
+    id
+    name
+    code
+    condition
+    details
+    branch {
+      id
+      name
+    }
+    receivedExpenses {
+      ammount
+    }
+  }
+}
+    `;
+
+export function useGetAssetsQuery(options: Omit<Urql.UseQueryArgs<GetAssetsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetAssetsQuery>({ query: GetAssetsDocument, ...options });
+};
 export const GetBranchesDocument = gql`
     query getBranches {
   getBranches {
@@ -1446,12 +1665,28 @@ export const GetBranchesDocument = gql`
       id
       name
     }
+    street
   }
 }
     `;
 
 export function useGetBranchesQuery(options: Omit<Urql.UseQueryArgs<GetBranchesQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetBranchesQuery>({ query: GetBranchesDocument, ...options });
+};
+export const GetRorsDocument = gql`
+    query getRORS($id: Float!) {
+  getRORs(id: $id) {
+    id
+    name
+    buying
+    pieces
+    selling
+  }
+}
+    `;
+
+export function useGetRorsQuery(options: Omit<Urql.UseQueryArgs<GetRorsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetRorsQuery>({ query: GetRorsDocument, ...options });
 };
 export const GetRegionsDocument = gql`
     query getRegions {
@@ -1476,6 +1711,22 @@ export const GetRolesDocument = gql`
 
 export function useGetRolesQuery(options: Omit<Urql.UseQueryArgs<GetRolesQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetRolesQuery>({ query: GetRolesDocument, ...options });
+};
+export const GetUsersDocument = gql`
+    query getUsers($employee: Boolean) {
+  getUsers(employee: $employee) {
+    ...Me
+    maxCredit
+    creditDays
+    credit
+    balance
+    salary
+  }
+}
+    ${MeFragmentDoc}`;
+
+export function useGetUsersQuery(options: Omit<Urql.UseQueryArgs<GetUsersQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetUsersQuery>({ query: GetUsersDocument, ...options });
 };
 export const MeDocument = gql`
     query Me {

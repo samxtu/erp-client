@@ -6,50 +6,52 @@ import {
   Button,
   Message,
   SearchProps,
+  Label,
 } from "semantic-ui-react";
 import {
-  useDeleteBranchMutation,
-  useGetBranchesQuery,
+  useDeleteAssetMutation,
+  useGetAssetsQuery,
 } from "../generated/graphql";
-import AddEditBranchItem from "../components/AddEditBranchItem";
+import AddEditAssetItem from "../components/AddEditAssetItem";
 import DeleteConfirm from "../components/DeleteConfirm";
 import SearchOrAdd from "../components/SearchOrAdd";
 import Placeholder from "../components/Placeholder";
 
-interface IBranchProps {}
+interface IAssetProps {}
 var loading: boolean = false;
 
-const Branchs: React.FC<IBranchProps> = () => {
+const Assets: React.FC<IAssetProps> = () => {
   const initialValueEdit = {
     open: false,
     title: "",
     id: 1000000,
-    feedback: addBranchFunc,
-    branchToEdit: {
+    feedback: addAssetFunc,
+    assetToEdit: {
       name: "",
-      phone: "",
-      regionId: "",
-      street: "",
+      code: "",
+      condition: "",
+      branchId: "",
+      details: "",
     },
   };
-  const [{ data, fetching }, reGetBranchs] = useGetBranchesQuery({
+  const [{ data, fetching }, reGetAssets] = useGetAssetsQuery({
     requestPolicy: "cache-and-network",
   });
   const [openDelete, setopenDelete] = useState({ open: false, id: 1000000 });
   const [openEditModal, setopenEditModal] = useState(initialValueEdit);
   const [error, seterror] = useState("");
   const [search, setsearch] = useState("");
-  const [, deleteBranch] = useDeleteBranchMutation();
-  async function deleteBranchFunc(id: number) {
+  const [, deleteAsset] = useDeleteAssetMutation();
+  async function deleteAssetFunc(id: number) {
     setopenDelete({ open: false, id: 1000000 });
     console.log("delete with id: ", id);
-    const { error } = await deleteBranch({ id });
+    const { error } = await deleteAsset({ id });
     if (error) seterror(error.message);
-    reGetBranchs({ requestPolicy: "network-only" });
+    reGetAssets({ requestPolicy: "network-only" });
   }
-  async function addBranchFunc() {
+  async function addAssetFunc() {
     setopenEditModal(initialValueEdit);
-    reGetBranchs({ requestPolicy: "network-only" });
+    reGetAssets({ requestPolicy: "network-only" });
   }
   function handleSearch(
     e: React.MouseEvent<HTMLElement, MouseEvent>,
@@ -59,24 +61,24 @@ const Branchs: React.FC<IBranchProps> = () => {
     else setsearch("");
   }
   // useEffect(() => {
-  //   console.log("rerendering Branchs");
+  //   console.log("rerendering Assets");
   // }, [data, fetching]);
   return (
     <>
       <DeleteConfirm
-        item="Branch"
+        item="Asset"
         open={openDelete.open}
         id={openDelete.id!}
-        feedback={deleteBranchFunc}
+        feedback={deleteAssetFunc}
         nofeedback={() => setopenDelete({ open: false, id: 1000000 })}
       />
-      <AddEditBranchItem
+      <AddEditAssetItem
         open={openEditModal.open}
         header={openEditModal.title}
         feedback={openEditModal.feedback}
         id={openEditModal.id}
         nofeedback={() => setopenEditModal(initialValueEdit)}
-        branchToEdit={openEditModal.branchToEdit}
+        assetToEdit={openEditModal.assetToEdit}
       />
 
       <SearchOrAdd
@@ -86,10 +88,10 @@ const Branchs: React.FC<IBranchProps> = () => {
           setopenEditModal({
             ...initialValueEdit,
             open: open,
-            title: "Add Branch",
+            title: "Add Asset",
           })
         }
-        title="Branch"
+        title="Asset"
       />
       {error === "" ? null : (
         <Message negative>
@@ -101,46 +103,65 @@ const Branchs: React.FC<IBranchProps> = () => {
           <span
             style={{ marginLeft: "27%", fontWeight: "bold", fontSize: "1em" }}
           >
-            Branchs:{" "}
+            Assets:{" "}
           </span>
           <span style={{ fontSize: "1em" }}>{search}</span>
         </Segment>
         {fetching && <Placeholder lines={[1, 1, 1, 1, 1, 1, 11, 1]} />}
-        <Segment.Group style={{ marginTop: 0 }}>
-          {!fetching && !data?.getBranches && (
-            <Segment>No Branch added!</Segment>
-          )}
-          {!fetching &&
-            data?.getBranches &&
-            data.getBranches.map((r) => (
-              <Segment
-                style={{
-                  width: "98%",
-                  padding: "5px",
-                }}
-                key={r.id}
-              >
-                <Grid>
-                  <Grid.Column
-                    width={10}
-                    style={{ fontSize: "2rem", textAlign: "center" }}
-                  >
-                    {r.name}
+        <Segment style={{ marginTop: 0 }}>
+          {!fetching && !data?.getAssets && <Segment>No Asset added!</Segment>}
+        </Segment>
+        <Segment style={{ marginTop: 0, borderTop: "none" }}>
+          <Grid columns={5} divided>
+            {!fetching && data?.getAssets && (
+              <Grid.Row key="title">
+                <Grid.Column>
+                  <b>Asset name</b>
+                </Grid.Column>
+                <Grid.Column>
+                  <b>Asset code</b>
+                </Grid.Column>
+                <Grid.Column>
+                  <b>Asset condition</b>
+                </Grid.Column>
+                <Grid.Column>
+                  <b>Asset branch</b>
+                </Grid.Column>
+                <Grid.Column>
+                  <b>Actions</b>
+                </Grid.Column>
+              </Grid.Row>
+            )}
+            {!fetching &&
+              data?.getAssets &&
+              data.getAssets.map((r) => (
+                <Grid.Row key={JSON.stringify(r)}>
+                  <Grid.Column>{r.name}</Grid.Column>
+                  <Grid.Column>{r.code}</Grid.Column>
+                  <Grid.Column>
+                    <Label
+                      color={r.condition === "working" ? "teal" : "red"}
+                      tag
+                    >
+                      {r.condition}
+                    </Label>
                   </Grid.Column>
-                  <Grid.Column width={4}>
+                  <Grid.Column>{r.branch.name}</Grid.Column>
+                  <Grid.Column>
                     <Button
                       style={{ margin: "auto" }}
                       onClick={() =>
                         setopenEditModal({
                           open: true,
-                          title: "Edit Branch",
+                          title: "Edit Asset",
                           id: r.id,
-                          feedback: addBranchFunc,
-                          branchToEdit: {
+                          feedback: addAssetFunc,
+                          assetToEdit: {
                             name: r.name,
-                            phone: r.phone,
-                            regionId: r.region.id.toString(),
-                            street: r.street,
+                            code: r.code,
+                            branchId: r.branch.id.toString(),
+                            condition: r.condition,
+                            details: r.details,
                           },
                         })
                       }
@@ -155,13 +176,13 @@ const Branchs: React.FC<IBranchProps> = () => {
                       <Icon name="delete" />
                     </Button>
                   </Grid.Column>
-                </Grid>
-              </Segment>
-            ))}
-        </Segment.Group>
+                </Grid.Row>
+              ))}
+          </Grid>
+        </Segment>
       </Segment.Group>
     </>
   );
 };
 
-export default Branchs;
+export default Assets;

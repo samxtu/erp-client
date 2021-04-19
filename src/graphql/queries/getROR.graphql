@@ -1,0 +1,9 @@
+query getRORS($id: Float!) {
+  getRORs(id: $id) {
+    id
+    name
+    buying
+    pieces
+    selling
+  }
+}

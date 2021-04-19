@@ -9,9 +9,9 @@ import {
   Message,
 } from "semantic-ui-react";
 import {
-  useAddBranchMutation,
-  useEditBranchMutation,
-  useGetRegionsQuery,
+  useAddAssetMutation,
+  useEditAssetMutation,
+  useGetBranchesQuery,
 } from "../generated/graphql";
 import * as Yup from "yup";
 import { InputField } from "./InputField";
@@ -22,11 +22,12 @@ interface Props {
   header: string;
   feedback: () => void;
   id: number;
-  branchToEdit?: {
+  assetToEdit?: {
     name: string;
-    phone: string;
-    regionId: string;
-    street: string;
+    code: string;
+    branchId: string;
+    condition: string;
+    details: string;
   };
 }
 
@@ -36,25 +37,29 @@ function AddEditSingleItem({
   header,
   feedback,
   id,
-  branchToEdit,
+  assetToEdit,
 }: Props): ReactElement {
-  const [{ data, fetching }] = useGetRegionsQuery();
-  const [, addBranch] = useAddBranchMutation();
-  const [, editBranch] = useEditBranchMutation();
+  const [{ data, fetching }] = useGetBranchesQuery();
+  const [, addAsset] = useAddAssetMutation();
+  const [, editAsset] = useEditAssetMutation();
   const [error, seterror] = useState("");
   const validationSchema = Yup.object({
     name: Yup.string()
       .min(3, "Must be 3 or more characters!")
       .max(20, "Must be 20 characters or less!")
       .required("Required"),
-    phone: Yup.string()
-      .min(9, "Phone number format (123456789)!")
-      .max(9, "Phone number format (123456789)!")
-      .required("Required"),
-    regionId: Yup.string().min(1, "Required").required("Required"),
-    street: Yup.string()
+    code: Yup.string()
       .min(3, "Must be 3 or more characters!")
       .max(20, "Must be 20 characters or less!")
+      .required("Required"),
+    branchId: Yup.string().min(1, "Required").required("Required"),
+    condition: Yup.string()
+      .min(3, "Must be 3 or more characters!")
+      .max(20, "Must be 20 characters or less!")
+      .required("Required"),
+    details: Yup.string()
+      .min(3, "Must be 3 or more characters!")
+      .max(100, "Must be 100 characters or less!")
       .required("Required"),
   });
   useEffect(() => {
@@ -81,23 +86,25 @@ function AddEditSingleItem({
             ) : null}
             <Formik
               initialValues={{
-                name: branchToEdit?.name,
-                phone: branchToEdit?.phone,
-                regionId: branchToEdit?.regionId,
-                street: branchToEdit?.street,
+                name: assetToEdit?.name,
+                code: assetToEdit?.code,
+                branchId: assetToEdit?.branchId,
+                condition: assetToEdit?.condition,
+                details: assetToEdit?.details,
               }}
               onSubmit={async (values, { setErrors }) => {
                 const vals = {
                   ...values,
-                  regionId: values.regionId ? values.regionId.toString() : "",
+                  branchId: values.branchId ? values.branchId.toString() : "",
                 };
                 if (id === 1000000) {
-                  const { error } = await addBranch({
+                  const { error } = await addAsset({
                     args: {
                       name: vals.name!,
-                      phone: vals.phone!,
-                      street: vals.street!,
-                      regionId: parseInt(vals.regionId),
+                      code: vals.code!,
+                      condition: vals.condition!,
+                      branchId: parseInt(vals.branchId),
+                      details: vals.details!,
                     },
                   });
                   if (error) {
@@ -108,12 +115,13 @@ function AddEditSingleItem({
                     feedback();
                   }
                 } else if (id !== 1000000) {
-                  const { error } = await editBranch({
+                  const { error } = await editAsset({
                     args: {
                       name: vals.name!,
-                      phone: vals.phone!,
-                      street: vals.street!,
-                      regionId: parseInt(vals.regionId),
+                      code: vals.code!,
+                      condition: vals.condition!,
+                      branchId: parseInt(vals.branchId),
+                      details: vals.details!,
                     },
                     id,
                   });
@@ -141,40 +149,37 @@ function AddEditSingleItem({
                       fluid
                       name="name"
                       touched={props.touched.name}
-                      label="Branch name"
-                      placeholder="Branch name"
+                      label="Asset name"
+                      placeholder="Asset name"
                       type="text"
                     />
                     <InputField
                       fluid
-                      name="phone"
-                      touched={props.touched.phone}
-                      label="Phone number"
-                      placeholder="123456789"
-                      normal
-                      prefix="+255"
-                      type="tel"
-                      pattern="[1-9]{1}[0-9]{8}"
+                      name="code"
+                      touched={props.touched.code}
+                      label="Asset code"
+                      placeholder="Asset code"
+                      type="text"
                     />
                     <InputField
                       fluid
-                      name="regionId"
-                      touched={props.touched.regionId}
-                      label="Region"
-                      placeholder="Region"
-                      value={branchToEdit?.regionId}
+                      key="branchSelect"
+                      name="branchId"
+                      touched={props.touched.branchId}
+                      label="Branch"
+                      placeholder="Branch"
                       select
                       options={
                         fetching
                           ? [
                               {
                                 key: "reg",
-                                text: "wait for regions",
+                                text: "wait for branches",
                                 value: "",
                               },
                             ]
-                          : data?.getRegions
-                          ? data.getRegions.map((r) => {
+                          : data?.getBranches
+                          ? data.getBranches.map((r) => {
                               return {
                                 key: r.id + r.name,
                                 text: r.name,
@@ -184,7 +189,7 @@ function AddEditSingleItem({
                           : [
                               {
                                 key: "reg",
-                                text: "add regions to system",
+                                text: "add branches to system",
                                 value: "",
                               },
                             ]
@@ -192,11 +197,31 @@ function AddEditSingleItem({
                     />
                     <InputField
                       fluid
-                      name="street"
-                      touched={props.touched.street}
-                      label="Street name"
-                      placeholder="Street name"
-                      type="text"
+                      key="conditionSelect"
+                      name="condition"
+                      touched={props.touched.condition}
+                      label="Condition"
+                      placeholder="Condition"
+                      select
+                      options={[
+                        {
+                          key: "working",
+                          text: "Working",
+                          value: "working",
+                        },
+                        {
+                          key: "notworking",
+                          text: "Not working",
+                          value: "not working",
+                        },
+                      ]}
+                    />
+                    <InputField
+                      fluid
+                      name="details"
+                      touched={props.touched.details}
+                      label="Asset details/description"
+                      placeholder="Asset details/description"
                     />
                   </Segment>
                   <Button
@@ -210,7 +235,7 @@ function AddEditSingleItem({
                   <Button
                     style={{ display: "none" }}
                     type="reset"
-                    id="branchReset"
+                    id="assetReset"
                   />
                 </Form>
               )}
@@ -220,7 +245,7 @@ function AddEditSingleItem({
         <Modal.Actions>
           <Button
             onClick={() => {
-              return document.getElementById("branchReset")?.click();
+              return document.getElementById("assetReset")?.click();
             }}
             style={{ float: "left" }}
           >

@@ -22,42 +22,36 @@ interface Props {
 
 const SearchOrAdd = ({ handleSearch, handleOpen, loading, title }: Props) => {
   return (
-    <>
-      <Segment placeholder size="tiny">
-        <Grid columns={2} stackable textAlign="center">
-          <Divider vertical>Or</Divider>
+    <Segment placeholder size="tiny">
+      <Grid columns={2} stackable textAlign="center">
+        <Divider vertical>Or</Divider>
 
-          <Grid.Row verticalAlign="middle">
-            <Grid.Column>
-              <Header icon>
-                <Icon name="search" />
-                Find {title}
-              </Header>
+        <Grid.Row verticalAlign="middle">
+          <Grid.Column>
+            <Header icon>
+              <Icon name="search" />
+              Find {title}
+            </Header>
 
-              <Search
-                showNoResults={false}
-                placeholder={`Search ${title}s...`}
-                onSearchChange={handleSearch}
-              />
-            </Grid.Column>
+            <Search
+              showNoResults={false}
+              placeholder={`Search ${title}s...`}
+              onSearchChange={handleSearch}
+            />
+          </Grid.Column>
 
-            <Grid.Column>
-              <Header icon>
-                <Icon name="world" />
-                Add New {title}
-              </Header>
-              <Button
-                loading={loading}
-                onClick={() => handleOpen(true)}
-                primary
-              >
-                Create
-              </Button>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Segment>
-    </>
+          <Grid.Column>
+            <Header icon>
+              <Icon name="world" />
+              Add New {title}
+            </Header>
+            <Button loading={loading} onClick={() => handleOpen(true)} primary>
+              Create
+            </Button>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </Segment>
   );
 };
 

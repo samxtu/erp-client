@@ -249,6 +249,8 @@ const SideNav: React.FC<ISideNavProps> = () => {
           ) : null}
         </Menu.Item>
         <Menu.Item
+          as={Link}
+          to="/assets"
           id="assets"
           active={state.activeItem === "assets"}
           onClick={() => handleItemClick("assets")}
@@ -257,6 +259,8 @@ const SideNav: React.FC<ISideNavProps> = () => {
           <span className="sidenavitems">Assets</span>
         </Menu.Item>
         <Menu.Item
+          as={Link}
+          to="/ror"
           id="ror"
           active={state.activeItem === "ror"}
           onClick={() => handleItemClick("ror")}

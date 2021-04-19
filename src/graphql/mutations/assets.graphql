@@ -1,0 +1,17 @@
+mutation addAsset($args: AssetInput!) {
+  addAsset(args: $args) {
+    ...BooleanResponse
+  }
+}
+
+mutation editAsset($args: AssetInput!, $id: Float!) {
+  editAsset(args: $args, id: $id) {
+    ...BooleanResponse
+  }
+}
+
+mutation deleteAsset($id: Float!) {
+  deleteAsset(id: $id) {
+    ...BooleanResponse
+  }
+}

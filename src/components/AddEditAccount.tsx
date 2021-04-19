@@ -9,9 +9,9 @@ import {
   Message,
 } from "semantic-ui-react";
 import {
-  useAddBranchMutation,
-  useEditBranchMutation,
-  useGetRegionsQuery,
+  useAddAccountMutation,
+  useEditAccountMutation,
+  useGetBranchesQuery,
 } from "../generated/graphql";
 import * as Yup from "yup";
 import { InputField } from "./InputField";
@@ -22,11 +22,11 @@ interface Props {
   header: string;
   feedback: () => void;
   id: number;
-  branchToEdit?: {
+  accountToEdit?: {
     name: string;
-    phone: string;
-    regionId: string;
-    street: string;
+    number: string;
+    balance: number;
+    branchId: number;
   };
 }
 
@@ -36,33 +36,32 @@ function AddEditSingleItem({
   header,
   feedback,
   id,
-  branchToEdit,
+  accountToEdit,
 }: Props): ReactElement {
-  const [{ data, fetching }] = useGetRegionsQuery();
-  const [, addBranch] = useAddBranchMutation();
-  const [, editBranch] = useEditBranchMutation();
+  const [{ data, fetching }] = useGetBranchesQuery();
+  const [, addAccount] = useAddAccountMutation();
+  const [, editAccount] = useEditAccountMutation();
   const [error, seterror] = useState("");
+  const [initialValues, setinitialValues] = useState(accountToEdit);
   const validationSchema = Yup.object({
     name: Yup.string()
       .min(3, "Must be 3 or more characters!")
       .max(20, "Must be 20 characters or less!")
       .required("Required"),
-    phone: Yup.string()
-      .min(9, "Phone number format (123456789)!")
-      .max(9, "Phone number format (123456789)!")
+    number: Yup.string()
+      .min(3, "Must be longer than 3 characters!")
+      .max(20, "Must not be longer than 20 characters!")
       .required("Required"),
-    regionId: Yup.string().min(1, "Required").required("Required"),
-    street: Yup.string()
-      .min(3, "Must be 3 or more characters!")
-      .max(20, "Must be 20 characters or less!")
-      .required("Required"),
+    branchId: Yup.string().min(1, "Required").required("Required"),
+    balance: Yup.number().required("Required"),
   });
   useEffect(() => {
-    console.log("open add or edit branch", open);
+    console.log("open add or edit branch", id);
+    setinitialValues(accountToEdit);
     if (open) {
       seterror("");
     }
-  }, [data, fetching, open]);
+  }, [data, fetching, open, accountToEdit, id]);
   return (
     <Portal onClose={nofeedback} open={open}>
       <Modal
@@ -80,24 +79,21 @@ function AddEditSingleItem({
               </Message>
             ) : null}
             <Formik
-              initialValues={{
-                name: branchToEdit?.name,
-                phone: branchToEdit?.phone,
-                regionId: branchToEdit?.regionId,
-                street: branchToEdit?.street,
-              }}
+              enableReinitialize={true}
+              initialValues={initialValues!}
               onSubmit={async (values, { setErrors }) => {
                 const vals = {
                   ...values,
-                  regionId: values.regionId ? values.regionId.toString() : "",
+                  balance: values.balance!.toString(),
+                  branchId: values.branchId ? values.branchId.toString() : "",
                 };
                 if (id === 1000000) {
-                  const { error } = await addBranch({
+                  const { error } = await addAccount({
                     args: {
                       name: vals.name!,
-                      phone: vals.phone!,
-                      street: vals.street!,
-                      regionId: parseInt(vals.regionId),
+                      number: vals.number!,
+                      balance: parseInt(vals.balance)!,
+                      branchId: parseInt(vals.branchId),
                     },
                   });
                   if (error) {
@@ -108,14 +104,14 @@ function AddEditSingleItem({
                     feedback();
                   }
                 } else if (id !== 1000000) {
-                  const { error } = await editBranch({
+                  const { error } = await editAccount({
                     args: {
                       name: vals.name!,
-                      phone: vals.phone!,
-                      street: vals.street!,
-                      regionId: parseInt(vals.regionId),
+                      number: vals.number!,
+                      branchId: parseInt(vals.branchId),
+                      balance: accountToEdit?.balance!,
                     },
-                    id,
+                    id: id,
                   });
                   if (error) {
                     console.log("error submitting", error);
@@ -135,46 +131,44 @@ function AddEditSingleItem({
                   size="large"
                   onSubmit={props.submitForm}
                   onReset={props.resetForm}
+                  id="accountForm"
                 >
                   <Segment stacked>
                     <InputField
                       fluid
                       name="name"
                       touched={props.touched.name}
-                      label="Branch name"
-                      placeholder="Branch name"
+                      label="Account name"
+                      placeholder="Account name"
                       type="text"
                     />
                     <InputField
                       fluid
-                      name="phone"
-                      touched={props.touched.phone}
-                      label="Phone number"
-                      placeholder="123456789"
+                      name="number"
+                      touched={props.touched.number}
+                      label="Account number"
+                      placeholder="e.g 1009844A9665GGG2"
                       normal
-                      prefix="+255"
-                      type="tel"
-                      pattern="[1-9]{1}[0-9]{8}"
+                      type="text"
                     />
                     <InputField
                       fluid
-                      name="regionId"
-                      touched={props.touched.regionId}
-                      label="Region"
-                      placeholder="Region"
-                      value={branchToEdit?.regionId}
+                      name="branchId"
+                      touched={props.touched.branchId}
+                      label="Branch"
+                      placeholder="Branch"
                       select
                       options={
                         fetching
                           ? [
                               {
-                                key: "reg",
-                                text: "wait for regions",
+                                key: "bra",
+                                text: "wait for branches",
                                 value: "",
                               },
                             ]
-                          : data?.getRegions
-                          ? data.getRegions.map((r) => {
+                          : data?.getBranches
+                          ? data.getBranches.map((r) => {
                               return {
                                 key: r.id + r.name,
                                 text: r.name,
@@ -183,21 +177,23 @@ function AddEditSingleItem({
                             })
                           : [
                               {
-                                key: "reg",
-                                text: "add regions to system",
+                                key: "bra",
+                                text: "add branches to system",
                                 value: "",
                               },
                             ]
                       }
                     />
-                    <InputField
-                      fluid
-                      name="street"
-                      touched={props.touched.street}
-                      label="Street name"
-                      placeholder="Street name"
-                      type="text"
-                    />
+                    {id === 1000000 ? (
+                      <InputField
+                        fluid
+                        touched={props.touched.balance}
+                        name="balance"
+                        label="Initial balance"
+                        placeholder="initial account balance"
+                        type="number"
+                      />
+                    ) : null}
                   </Segment>
                   <Button
                     loading={props.isSubmitting}
@@ -210,7 +206,7 @@ function AddEditSingleItem({
                   <Button
                     style={{ display: "none" }}
                     type="reset"
-                    id="branchReset"
+                    id="accountReset"
                   />
                 </Form>
               )}
@@ -220,7 +216,7 @@ function AddEditSingleItem({
         <Modal.Actions>
           <Button
             onClick={() => {
-              return document.getElementById("branchReset")?.click();
+              return document.getElementById("accountReset")?.click();
             }}
             style={{ float: "left" }}
           >
