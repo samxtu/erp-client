@@ -1,0 +1,21 @@
+mutation addPurchase($args: PurchaseInput!){
+  addPurchase(args:$args){
+    ...BooleanResponse
+  }
+}
+
+mutation editPurchase($id: Float!, $args: PurchaseInput!) {
+  editPurchase(id: $id, args: $args) {
+    ...BooleanResponse
+  }
+}
+
+mutation deletePurchase($id: Float!){
+  deletePurchase(id: $id){
+    status
+    error{
+      target
+      message
+    }
+  }
+}

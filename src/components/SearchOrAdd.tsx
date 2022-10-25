@@ -1,4 +1,5 @@
 import React from "react";
+import { IconType } from "react-icons";
 import {
   Segment,
   Grid,
@@ -8,6 +9,7 @@ import {
   Search,
   Button,
   SearchProps,
+  SemanticICONS,
 } from "semantic-ui-react";
 
 interface Props {
@@ -20,7 +22,7 @@ interface Props {
   title: string;
 }
 
-const SearchOrAdd = ({ handleSearch, handleOpen, loading, title }: Props) => {
+const SearchOrAdd: React.FC<Props> = ({ handleSearch, handleOpen, loading, title, children }) => {
   return (
     <Segment placeholder size="tiny">
       <Grid columns={2} stackable textAlign="center">
@@ -42,7 +44,7 @@ const SearchOrAdd = ({ handleSearch, handleOpen, loading, title }: Props) => {
 
           <Grid.Column>
             <Header icon>
-              <Icon name="world" />
+              <p>{children}</p>
               Add New {title}
             </Header>
             <Button loading={loading} onClick={() => handleOpen(true)} primary>

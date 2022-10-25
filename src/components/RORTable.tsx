@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Icon, Menu, Table, Button, Message } from "semantic-ui-react";
-import { useDeleteRorMutation, useGetRorsQuery } from "../generated/graphql";
+import { useDeleteRorMutation, useGetRoRsQuery } from "../generated/graphql";
 import DeleteConfirm from "./DeleteConfirm";
 
 const TableExamplePagination = ({
@@ -13,28 +13,11 @@ const TableExamplePagination = ({
   const [openDelete, setopenDelete] = useState({ open: false, id: 1000000 });
   const [error, seterror] = useState("");
   const [, deleteROR] = useDeleteRorMutation();
-  const [{ data: rorlist }, reGetRors] = useGetRorsQuery({
-    requestPolicy: "cache-and-network",
-    variables: {
-      //remove this hard coded id
-      //remove this hard coded id
-      //remove this hard coded id
-      //remove this hard coded id
-      //remove this hard coded id
-      //remove this hard coded id
-      //remove this hard coded id
-      //remove this hard coded id
-      //remove this hard coded id
-      //remove this hard coded id
-      //remove this hard coded id
-      //remove this hard coded id
-      //remove this hard coded id
-      //remove this hard coded id
-      id: 5,
-    },
+  const [{ data: rorlist }, reGetRors] = useGetRoRsQuery({
+    requestPolicy: "cache-and-network"
   });
   async function deleteRorFunc(id: number) {
-    setopenDelete({ open: false, id: 1000000 });
+    setopenDelete({ open: false, id:1000000});
     console.log("delete with id: ", id);
     const { error } = await deleteROR({ id });
     if (error) seterror(error.message);
@@ -42,7 +25,7 @@ const TableExamplePagination = ({
   }
   useEffect(() => {
     console.log("updating table");
-    reGetRors({ variables: { id: 5 } });
+    reGetRors();
   }, [update, reGetRors]);
   return (
     <>
@@ -91,8 +74,7 @@ const TableExamplePagination = ({
                   %
                 </Table.Cell>
                 <Table.Cell>
-                  <Button
-                    disabled
+                  {/* <Button
                     style={{ margin: "auto" }}
                     onClick={() =>
                       edit({
@@ -107,7 +89,7 @@ const TableExamplePagination = ({
                     }
                   >
                     <Icon name="edit" />
-                  </Button>
+                  </Button> */}
                   <Button
                     secondary
                     style={{ margin: "auto", marginLeft: "10px" }}

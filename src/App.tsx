@@ -14,7 +14,12 @@ import Accounts from "./pages/accounts";
 import Roles from "./pages/roles";
 import Branches from "./pages/branches";
 import Assets from "./pages/assets";
+import Products from "./pages/products";
+import Purchases from "./pages/purchases";
 import ROR from "./pages/ror";
+import Users from "./pages/users";
+import Expenses from "./pages/expenses";
+import Sales from "./pages/sales";
 
 function App() {
   return (
@@ -28,10 +33,12 @@ function App() {
             <AuthRoute exact path="/roles" component={Roles} />
             <AuthRoute exact path="/branches" component={Branches} />
             <AuthRoute exact path="/assets" component={Assets} />
+            <AuthRoute exact path="/expenses" component={Expenses} />
             <AuthRoute exact path="/ror" component={ROR} />
-            {/* <AuthRoute exact path="/" component={home} />
-            <AuthRoute exact path="/" component={home} />
-            <AuthRoute exact path="/" component={home} /> */}
+            <AuthRoute exact path="/users" component={Users} />
+            <AuthRoute exact path="/purchases" component={Purchases} />
+            <AuthRoute exact path="/sales" component={Sales} />
+            <AuthRoute exact path="/products" component={Products} /> 
             <UnAuthRoute exact path="/login" component={login} />
             <UnAuthRoute
               exact

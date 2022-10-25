@@ -96,7 +96,9 @@ const Regions: React.FC<IRegionProps> = () => {
           })
         }
         title="Region"
-      />
+      >
+        <Icon name="map marker alternate"/>
+      </SearchOrAdd>
       {error === "" ? null : (
         <Message negative>
           <Message.Header>{error}</Message.Header>

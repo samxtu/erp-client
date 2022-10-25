@@ -83,7 +83,7 @@ const RORAddAndEdit = ({ update }: Props) => {
         </Grid.Column>
         <Grid.Column width={4}>
           <Segment raised>
-            <>
+            <Grid.Row>
               <Label
                 as="a"
                 color={
@@ -106,8 +106,8 @@ const RORAddAndEdit = ({ update }: Props) => {
                     : addEditROR.selling - addEditROR.buying}
                 </Statistic.Value>
               </Statistic>
-            </>
-            <>
+            </Grid.Row>
+            <Grid.Row>
               <Label
                 as="a"
                 color={
@@ -139,7 +139,7 @@ const RORAddAndEdit = ({ update }: Props) => {
                   %
                 </Statistic.Label>
               </Statistic>
-            </>
+            </Grid.Row>
           </Segment>
         </Grid.Column>
         <Grid.Column width={3}>

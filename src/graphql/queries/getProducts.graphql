@@ -1,0 +1,13 @@
+query getProducts {
+  getProducts {
+    id
+    name
+    unit
+    stock
+    pieces
+    pieceUnit
+    pieceStock
+    pieceSellingPrice
+    sellingPrice
+  }
+}

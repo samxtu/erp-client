@@ -150,6 +150,8 @@ const SideNav: React.FC<ISideNavProps> = () => {
           id="sales"
           active={state.activeItem === "sales"}
           onClick={() => handleItemClick("sales")}
+          as={Link}
+          to="/sales"
         >
           <TiShoppingCart />
           <span className="sidenavitems">Sales</span>
@@ -158,6 +160,8 @@ const SideNav: React.FC<ISideNavProps> = () => {
           id="expenses"
           active={state.activeItem === "expenses"}
           onClick={() => handleItemClick("expenses")}
+          as={Link}
+          to="/expenses"
         >
           <GiPayMoney />
           <span className="sidenavitems">Expenses</span>
@@ -172,6 +176,8 @@ const SideNav: React.FC<ISideNavProps> = () => {
         </Menu.Item>
         <Menu.Item
           id="purchases"
+          as={Link}
+          to="/purchases"
           active={state.activeItem === "purchases"}
           onClick={() => handleItemClick("purchases")}
         >
@@ -180,6 +186,8 @@ const SideNav: React.FC<ISideNavProps> = () => {
         </Menu.Item>
         <Menu.Item
           id="products"
+          as={Link}
+          to="/products"
           active={state.activeItem === "products"}
           onClick={() => handleItemClick("products")}
         >
@@ -188,6 +196,8 @@ const SideNav: React.FC<ISideNavProps> = () => {
         </Menu.Item>
         <Menu.Item
           id="users"
+          as={Link}
+          to="/users"
           active={state.activeItem === "users"}
           onClick={() => handleItemClick("users")}
         >

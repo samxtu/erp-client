@@ -35,3 +35,13 @@ mutation register($params: RegisterArgs!) {
     }
   }
 }
+
+mutation editUser($id: Float!, $params: EditArgs!) {
+  editUser(id: $id, params: $params) {
+    status
+    error {
+      target
+      message
+    }
+  }
+}

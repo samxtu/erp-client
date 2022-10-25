@@ -31,7 +31,7 @@ interface Props {
   };
 }
 
-function AddEditSingleItem({
+function AddEditAssetItem({
   open,
   nofeedback,
   header,
@@ -144,7 +144,7 @@ function AddEditSingleItem({
                   onSubmit={props.submitForm}
                   onReset={props.resetForm}
                 >
-                  <Segment stacked>
+                  <Segment>
                     <InputField
                       fluid
                       name="name"
@@ -260,4 +260,4 @@ function AddEditSingleItem({
   );
 }
 
-export default AddEditSingleItem;
+export default AddEditAssetItem;

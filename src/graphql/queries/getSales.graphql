@@ -1,0 +1,66 @@
+query getSale($id: Float!) {
+  getSale(id: $id) {
+    id
+    saleDate
+    client {
+      id
+      name
+    }
+    product {
+      id
+      name
+      unit
+      pieceUnit
+      pieces
+      sellingPrice
+      pieceSellingPrice
+    }
+    quantity
+    pieceQuantity
+    sellingPrice
+    pieceSellingPrice
+    payed
+    creator{
+      id
+      name
+    }
+    seller{
+      id
+      name
+    }
+    account{
+      id
+      name
+    }
+  }
+}
+
+query getSales {
+  getSales{
+    id
+  	saleDate
+    client{
+      id
+      name
+    }
+    product{
+      id
+      name
+      unit
+      pieceUnit
+    }
+    seller{
+      id
+      name
+    }
+    account{
+      id
+      name
+    }
+    quantity
+    pieceQuantity
+    sellingPrice
+    pieceSellingPrice
+    payed
+	}
+}

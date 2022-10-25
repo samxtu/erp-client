@@ -16,6 +16,8 @@ type IAppProps = React.InputHTMLAttributes<HTMLInputElement> & {
   select?: boolean;
   prefix?: string;
   options?: DropdownItemProps[];
+  iconName?: string;
+  buttonName?: string;
 };
 
 export const InputField: React.FC<IAppProps> = ({
@@ -31,6 +33,8 @@ export const InputField: React.FC<IAppProps> = ({
   checkbox,
   prefix,
   options,
+  iconName,
+  buttonName,
   ...props
 }) => {
   const [field, { error }] = useField(props);
@@ -45,6 +49,7 @@ export const InputField: React.FC<IAppProps> = ({
           {...props}
           {...field}
           control={TextareaOrInput}
+          rows={rows}
         />
       </Form.Field>
     );
@@ -76,6 +81,7 @@ export const InputField: React.FC<IAppProps> = ({
           <Form.Checkbox
             {...field}
             {...(props as any)}
+            toggle
             id={field.name}
             label={label}
           />
@@ -91,6 +97,12 @@ export const InputField: React.FC<IAppProps> = ({
             {...props}
             {...field}
             label={prefix}
+            action={{
+              color: 'teal',
+              labelPosition: 'right',
+              icon: iconName,
+              content: buttonName,
+            }}
           />
           {error && touched ? (
             <Label

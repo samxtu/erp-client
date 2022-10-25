@@ -1,0 +1,29 @@
+mutation addSale($args: SaleInput!) {
+  addSale(args: $args) {
+    status
+    error {
+      target
+      message
+    }
+  }
+}
+
+mutation editSale($id: Float!, $args: SaleInput!) {
+  editSale(id: $id, args: $args) {
+    status
+    error {
+      target
+      message
+    }
+  }
+}
+
+mutation deleteSale($id: Float!){
+  deleteSale(id: $id){
+    status
+    error{
+      target
+      message
+    }
+  }
+}

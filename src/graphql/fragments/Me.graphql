@@ -4,6 +4,7 @@ fragment Me on User {
   email
   phone
   location
+  status
   role {
     id
     name

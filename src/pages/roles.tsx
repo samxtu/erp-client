@@ -99,7 +99,9 @@ const Roles: React.FC<IRoleProps> = () => {
           })
         }
         title="Role"
-      />
+      >
+        <Icon name="user secret" />
+      </SearchOrAdd>
       {error === "" ? null : (
         <Message negative>
           <Message.Header>{error}</Message.Header>
