@@ -22,7 +22,7 @@ const UnAuthRoute: React.FC<IUARProps> = ({
       {...rest}
       render={(props) =>
         data?.me?.id ? (
-          <Wrapper>
+          <Wrapper me={data.me}>
             <Component {...props} />
           </Wrapper>
         ) : (

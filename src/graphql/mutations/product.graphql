@@ -1,0 +1,21 @@
+mutation addProduct($args: ProductInput!) {
+  addProduct(args: $args) {
+    ...BooleanResponse
+  }
+}
+
+mutation editProduct($args: ProductEditInput!, $id: Float!) {
+  editProduct(args: $args, id: $id) {
+    ...BooleanResponse
+  }
+}
+
+mutation deleteProduct($id: Float!){
+  deleteProduct(id: $id){
+    status
+    error{
+      target
+      message
+    }
+  }
+}

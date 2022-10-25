@@ -90,7 +90,9 @@ const Branchs: React.FC<IBranchProps> = () => {
           })
         }
         title="Branch"
-      />
+      >
+        <Icon name="code branch" />
+      </SearchOrAdd>
       {error === "" ? null : (
         <Message negative>
           <Message.Header>{error}</Message.Header>

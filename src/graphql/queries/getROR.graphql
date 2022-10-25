@@ -1,5 +1,5 @@
-query getRORS($id: Float!) {
-  getRORs(id: $id) {
+query getRORs{
+  getRORs{
     id
     name
     buying

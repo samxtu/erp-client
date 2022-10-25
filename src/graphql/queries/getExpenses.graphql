@@ -1,0 +1,54 @@
+query getExpenses {
+  getExpenses{
+    id
+  	expenseDate
+    authorizer{
+      id
+      name
+    }
+    title
+    details
+    staff{
+      name
+      id
+    }
+    type
+    ammount
+    account{
+      id
+      name
+    }
+	}
+}
+
+query getExpense($id:Float!) {
+  getExpense(id: $id){
+    id
+  	expenseDate
+    authorizer{
+      id
+      name
+    }
+    title
+    details
+    staff{
+      name
+      id
+    }
+    asset{
+      id
+      name
+      code
+    }
+    type
+    ammount
+    account{
+      id
+      name
+    }
+    creator{
+      id
+      name
+    }
+	}
+}

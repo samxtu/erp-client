@@ -54,7 +54,7 @@ export type QueryGetBranchArgs = {
 
 
 export type QueryGetUsersArgs = {
-  employee?: Maybe<Scalars['Boolean']>;
+  roles?: Maybe<Array<Scalars['Float']>>;
 };
 
 
@@ -139,11 +139,6 @@ export type QueryGetPurchaseArgs = {
 };
 
 
-export type QueryGetRoRsArgs = {
-  id: Scalars['Float'];
-};
-
-
 export type QueryGetSaleArgs = {
   id: Scalars['Float'];
 };
@@ -202,9 +197,9 @@ export type User = {
   maxCredit: Scalars['Float'];
   creditDays: Scalars['Float'];
   credit: Scalars['Boolean'];
+  status: Scalars['Boolean'];
   balance: Scalars['Float'];
   salary: Scalars['Float'];
-  employee: Scalars['Boolean'];
   roleId: Scalars['Float'];
   role: Role;
   branchId: Scalars['Float'];
@@ -444,6 +439,7 @@ export type Mutation = {
   forgotPassword: BooleanResponse;
   resetPassword: UserResponse;
   register: BooleanResponse;
+  editUser: BooleanResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
   addAccount: BooleanResponse;
@@ -518,6 +514,12 @@ export type MutationResetPasswordArgs = {
 
 export type MutationRegisterArgs = {
   params: RegisterArgs;
+};
+
+
+export type MutationEditUserArgs = {
+  params: EditArgs;
+  id: Scalars['Float'];
 };
 
 
@@ -651,7 +653,7 @@ export type MutationAddProductArgs = {
 
 
 export type MutationEditProductArgs = {
-  args: ProductInput;
+  args: ProductEditInput;
   id: Scalars['Float'];
 };
 
@@ -773,12 +775,26 @@ export type RegisterArgs = {
   maxCredit: Scalars['Float'];
   creditDays: Scalars['Float'];
   credit: Scalars['Boolean'];
-  employee: Scalars['Boolean'];
   balance: Scalars['Float'];
   salary: Scalars['Float'];
   roleId: Scalars['Float'];
   branchId: Scalars['Float'];
   password: Scalars['String'];
+};
+
+export type EditArgs = {
+  name: Scalars['String'];
+  email: Scalars['String'];
+  phone: Scalars['String'];
+  location: Scalars['String'];
+  maxCredit: Scalars['Float'];
+  creditDays: Scalars['Float'];
+  credit: Scalars['Boolean'];
+  status: Scalars['Boolean'];
+  balance: Scalars['Float'];
+  salary: Scalars['Float'];
+  roleId: Scalars['Float'];
+  branchId: Scalars['Float'];
 };
 
 export type EmailPasswordArgs = {
@@ -820,7 +836,7 @@ export type ExpenseInput = {
   details: Scalars['String'];
   authorizerId: Scalars['Float'];
   staffId: Scalars['Float'];
-  assetId: Scalars['Float'];
+  assetId?: Maybe<Scalars['Float']>;
   ammount: Scalars['Float'];
   accountId: Scalars['Float'];
   type: Scalars['String'];
@@ -859,6 +875,15 @@ export type ProductInput = {
   unit: Scalars['String'];
   pieces: Scalars['Float'];
   pieceUnit: Scalars['String'];
+};
+
+export type ProductEditInput = {
+  name: Scalars['String'];
+  unit: Scalars['String'];
+  pieces: Scalars['Float'];
+  pieceUnit: Scalars['String'];
+  sellingPrice: Scalars['Float'];
+  pieceSellingPrice: Scalars['Float'];
 };
 
 export type PurchaseInput = {
@@ -900,7 +925,7 @@ export type ErrorFragment = (
 
 export type MeFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'name' | 'email' | 'phone' | 'location'>
+  & Pick<User, 'id' | 'name' | 'email' | 'phone' | 'location' | 'status'>
   & { role: (
     { __typename?: 'Role' }
     & Pick<Role, 'id' | 'name'>
@@ -1039,6 +1064,146 @@ export type DeleteBranchMutation = (
   ) }
 );
 
+export type AddExpenseMutationVariables = Exact<{
+  args: ExpenseInput;
+}>;
+
+
+export type AddExpenseMutation = (
+  { __typename?: 'Mutation' }
+  & { addExpense: (
+    { __typename?: 'BooleanResponse' }
+    & Pick<BooleanResponse, 'status'>
+    & { error?: Maybe<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'target' | 'message'>
+    )> }
+  ) }
+);
+
+export type DeleteExpenseMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type DeleteExpenseMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteExpense: (
+    { __typename?: 'BooleanResponse' }
+    & Pick<BooleanResponse, 'status'>
+    & { error?: Maybe<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'target' | 'message'>
+    )> }
+  ) }
+);
+
+export type EditExpenseMutationVariables = Exact<{
+  id: Scalars['Float'];
+  args: ExpenseInput;
+}>;
+
+
+export type EditExpenseMutation = (
+  { __typename?: 'Mutation' }
+  & { editExpense: (
+    { __typename?: 'BooleanResponse' }
+    & Pick<BooleanResponse, 'status'>
+    & { error?: Maybe<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'target' | 'message'>
+    )> }
+  ) }
+);
+
+export type AddProductMutationVariables = Exact<{
+  args: ProductInput;
+}>;
+
+
+export type AddProductMutation = (
+  { __typename?: 'Mutation' }
+  & { addProduct: (
+    { __typename?: 'BooleanResponse' }
+    & BooleanResponseFragment
+  ) }
+);
+
+export type EditProductMutationVariables = Exact<{
+  args: ProductEditInput;
+  id: Scalars['Float'];
+}>;
+
+
+export type EditProductMutation = (
+  { __typename?: 'Mutation' }
+  & { editProduct: (
+    { __typename?: 'BooleanResponse' }
+    & BooleanResponseFragment
+  ) }
+);
+
+export type DeleteProductMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type DeleteProductMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteProduct: (
+    { __typename?: 'BooleanResponse' }
+    & Pick<BooleanResponse, 'status'>
+    & { error?: Maybe<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'target' | 'message'>
+    )> }
+  ) }
+);
+
+export type AddPurchaseMutationVariables = Exact<{
+  args: PurchaseInput;
+}>;
+
+
+export type AddPurchaseMutation = (
+  { __typename?: 'Mutation' }
+  & { addPurchase: (
+    { __typename?: 'BooleanResponse' }
+    & BooleanResponseFragment
+  ) }
+);
+
+export type EditPurchaseMutationVariables = Exact<{
+  id: Scalars['Float'];
+  args: PurchaseInput;
+}>;
+
+
+export type EditPurchaseMutation = (
+  { __typename?: 'Mutation' }
+  & { editPurchase: (
+    { __typename?: 'BooleanResponse' }
+    & BooleanResponseFragment
+  ) }
+);
+
+export type DeletePurchaseMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type DeletePurchaseMutation = (
+  { __typename?: 'Mutation' }
+  & { deletePurchase: (
+    { __typename?: 'BooleanResponse' }
+    & Pick<BooleanResponse, 'status'>
+    & { error?: Maybe<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'target' | 'message'>
+    )> }
+  ) }
+);
+
 export type AddRegionMutationVariables = Exact<{
   name: Scalars['String'];
 }>;
@@ -1159,6 +1324,58 @@ export type DeleteRorMutation = (
   ) }
 );
 
+export type AddSaleMutationVariables = Exact<{
+  args: SaleInput;
+}>;
+
+
+export type AddSaleMutation = (
+  { __typename?: 'Mutation' }
+  & { addSale: (
+    { __typename?: 'BooleanResponse' }
+    & Pick<BooleanResponse, 'status'>
+    & { error?: Maybe<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'target' | 'message'>
+    )> }
+  ) }
+);
+
+export type EditSaleMutationVariables = Exact<{
+  id: Scalars['Float'];
+  args: SaleInput;
+}>;
+
+
+export type EditSaleMutation = (
+  { __typename?: 'Mutation' }
+  & { editSale: (
+    { __typename?: 'BooleanResponse' }
+    & Pick<BooleanResponse, 'status'>
+    & { error?: Maybe<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'target' | 'message'>
+    )> }
+  ) }
+);
+
+export type DeleteSaleMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type DeleteSaleMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteSale: (
+    { __typename?: 'BooleanResponse' }
+    & Pick<BooleanResponse, 'status'>
+    & { error?: Maybe<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'target' | 'message'>
+    )> }
+  ) }
+);
+
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -1219,6 +1436,41 @@ export type ResetPasswordMutation = (
   ) }
 );
 
+export type RegisterMutationVariables = Exact<{
+  params: RegisterArgs;
+}>;
+
+
+export type RegisterMutation = (
+  { __typename?: 'Mutation' }
+  & { register: (
+    { __typename?: 'BooleanResponse' }
+    & Pick<BooleanResponse, 'status'>
+    & { error?: Maybe<(
+      { __typename?: 'FieldError' }
+      & ErrorFragment
+    )> }
+  ) }
+);
+
+export type EditUserMutationVariables = Exact<{
+  id: Scalars['Float'];
+  params: EditArgs;
+}>;
+
+
+export type EditUserMutation = (
+  { __typename?: 'Mutation' }
+  & { editUser: (
+    { __typename?: 'BooleanResponse' }
+    & Pick<BooleanResponse, 'status'>
+    & { error?: Maybe<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'target' | 'message'>
+    )> }
+  ) }
+);
+
 export type GetAccountsQueryVariables = Exact<{
   branch?: Maybe<Scalars['Float']>;
 }>;
@@ -1271,12 +1523,86 @@ export type GetBranchesQuery = (
   )> }
 );
 
-export type GetRorsQueryVariables = Exact<{
+export type GetExpensesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetExpensesQuery = (
+  { __typename?: 'Query' }
+  & { getExpenses: Array<(
+    { __typename?: 'Expense' }
+    & Pick<Expense, 'id' | 'expenseDate' | 'title' | 'details' | 'type' | 'ammount'>
+    & { authorizer: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    ), staff: (
+      { __typename?: 'User' }
+      & Pick<User, 'name' | 'id'>
+    ), account: (
+      { __typename?: 'Account' }
+      & Pick<Account, 'id' | 'name'>
+    ) }
+  )> }
+);
+
+export type GetExpenseQueryVariables = Exact<{
   id: Scalars['Float'];
 }>;
 
 
-export type GetRorsQuery = (
+export type GetExpenseQuery = (
+  { __typename?: 'Query' }
+  & { getExpense?: Maybe<(
+    { __typename?: 'Expense' }
+    & Pick<Expense, 'id' | 'expenseDate' | 'title' | 'details' | 'type' | 'ammount'>
+    & { authorizer: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    ), staff: (
+      { __typename?: 'User' }
+      & Pick<User, 'name' | 'id'>
+    ), asset: (
+      { __typename?: 'Asset' }
+      & Pick<Asset, 'id' | 'name' | 'code'>
+    ), account: (
+      { __typename?: 'Account' }
+      & Pick<Account, 'id' | 'name'>
+    ), creator: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    ) }
+  )> }
+);
+
+export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetProductsQuery = (
+  { __typename?: 'Query' }
+  & { getProducts: Array<(
+    { __typename?: 'Product' }
+    & Pick<Product, 'id' | 'name' | 'unit' | 'stock' | 'pieces' | 'pieceUnit' | 'pieceStock' | 'pieceSellingPrice' | 'sellingPrice'>
+  )> }
+);
+
+export type GetPurchasesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPurchasesQuery = (
+  { __typename?: 'Query' }
+  & { getPurchases: Array<(
+    { __typename?: 'Purchase' }
+    & Pick<Purchase, 'id' | 'purchaseDate' | 'purchasePrice' | 'quantity' | 'supplierId' | 'sellingPrice' | 'pieceSellingPrice' | 'receipt' | 'accountId'>
+    & { product: (
+      { __typename?: 'Product' }
+      & Pick<Product, 'id' | 'name' | 'unit'>
+    ) }
+  )> }
+);
+
+export type GetRoRsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetRoRsQuery = (
   { __typename?: 'Query' }
   & { getRORs: Array<(
     { __typename?: 'ROR' }
@@ -1306,8 +1632,61 @@ export type GetRolesQuery = (
   )> }
 );
 
+export type GetSaleQueryVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type GetSaleQuery = (
+  { __typename?: 'Query' }
+  & { getSale?: Maybe<(
+    { __typename?: 'Sale' }
+    & Pick<Sale, 'id' | 'saleDate' | 'quantity' | 'pieceQuantity' | 'sellingPrice' | 'pieceSellingPrice' | 'payed'>
+    & { client: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    ), product: (
+      { __typename?: 'Product' }
+      & Pick<Product, 'id' | 'name' | 'unit' | 'pieceUnit' | 'pieces' | 'sellingPrice' | 'pieceSellingPrice'>
+    ), creator: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    ), seller: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    ), account: (
+      { __typename?: 'Account' }
+      & Pick<Account, 'id' | 'name'>
+    ) }
+  )> }
+);
+
+export type GetSalesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetSalesQuery = (
+  { __typename?: 'Query' }
+  & { getSales: Array<(
+    { __typename?: 'Sale' }
+    & Pick<Sale, 'id' | 'saleDate' | 'quantity' | 'pieceQuantity' | 'sellingPrice' | 'pieceSellingPrice' | 'payed'>
+    & { client: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    ), product: (
+      { __typename?: 'Product' }
+      & Pick<Product, 'id' | 'name' | 'unit' | 'pieceUnit'>
+    ), seller: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    ), account: (
+      { __typename?: 'Account' }
+      & Pick<Account, 'id' | 'name'>
+    ) }
+  )> }
+);
+
 export type GetUsersQueryVariables = Exact<{
-  employee?: Maybe<Scalars['Boolean']>;
+  roles?: Maybe<Array<Scalars['Float']>>;
 }>;
 
 
@@ -1315,7 +1694,81 @@ export type GetUsersQuery = (
   { __typename?: 'Query' }
   & { getUsers: Array<(
     { __typename?: 'User' }
+    & Pick<User, 'roleId' | 'maxCredit' | 'creditDays' | 'credit' | 'balance' | 'salary'>
+    & MeFragment
+  )> }
+);
+
+export type GetUserQueryVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type GetUserQuery = (
+  { __typename?: 'Query' }
+  & { getUser?: Maybe<(
+    { __typename?: 'User' }
     & Pick<User, 'maxCredit' | 'creditDays' | 'credit' | 'balance' | 'salary'>
+    & { payments: Array<(
+      { __typename?: 'Payment' }
+      & Pick<Payment, 'id' | 'paymentDate' | 'ammount'>
+      & { payer: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'name'>
+      ), collector: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'name'>
+      ) }
+    )>, suppliedPurchases: Array<(
+      { __typename?: 'Purchase' }
+      & Pick<Purchase, 'id' | 'purchaseDate' | 'quantity' | 'purchasePrice'>
+      & { product: (
+        { __typename?: 'Product' }
+        & Pick<Product, 'id' | 'name' | 'unit' | 'pieceUnit'>
+      ) }
+    )>, collections: Array<(
+      { __typename?: 'Payment' }
+      & Pick<Payment, 'id' | 'paymentDate' | 'ammount'>
+      & { payer: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'name'>
+      ) }
+    )>, incentives: Array<(
+      { __typename?: 'Incentive' }
+      & Pick<Incentive, 'id' | 'quantity' | 'incentivePrice'>
+      & { product: (
+        { __typename?: 'Product' }
+        & Pick<Product, 'id' | 'name' | 'unit' | 'pieceUnit'>
+      ) }
+    )>, servedSales: Array<(
+      { __typename?: 'Sale' }
+      & Pick<Sale, 'id' | 'saleDate' | 'quantity' | 'pieceQuantity' | 'sellingPrice' | 'pieceSellingPrice' | 'payed'>
+      & { product: (
+        { __typename?: 'Product' }
+        & Pick<Product, 'id' | 'name' | 'unit' | 'pieceUnit'>
+      ) }
+    )>, initiatedSales: Array<(
+      { __typename?: 'Sale' }
+      & Pick<Sale, 'id' | 'saleDate' | 'quantity' | 'pieceQuantity' | 'sellingPrice' | 'pieceSellingPrice' | 'payed'>
+      & { product: (
+        { __typename?: 'Product' }
+        & Pick<Product, 'id' | 'name' | 'unit' | 'pieceUnit'>
+      ) }
+    )>, authorizedExpenses: Array<(
+      { __typename?: 'Expense' }
+      & Pick<Expense, 'id' | 'expenseDate' | 'ammount' | 'title'>
+      & { staff: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'name'>
+      ) }
+    )>, receivedExpenses: Array<(
+      { __typename?: 'Expense' }
+      & Pick<Expense, 'id' | 'expenseDate' | 'title' | 'ammount'>
+      & { authorizer: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'name'>
+      ) }
+    )> }
     & MeFragment
   )> }
 );
@@ -1344,6 +1797,7 @@ export const MeFragmentDoc = gql`
   email
   phone
   location
+  status
   role {
     id
     name
@@ -1462,6 +1916,125 @@ export const DeleteBranchDocument = gql`
 export function useDeleteBranchMutation() {
   return Urql.useMutation<DeleteBranchMutation, DeleteBranchMutationVariables>(DeleteBranchDocument);
 };
+export const AddExpenseDocument = gql`
+    mutation addExpense($args: ExpenseInput!) {
+  addExpense(args: $args) {
+    status
+    error {
+      target
+      message
+    }
+  }
+}
+    `;
+
+export function useAddExpenseMutation() {
+  return Urql.useMutation<AddExpenseMutation, AddExpenseMutationVariables>(AddExpenseDocument);
+};
+export const DeleteExpenseDocument = gql`
+    mutation deleteExpense($id: Float!) {
+  deleteExpense(id: $id) {
+    status
+    error {
+      target
+      message
+    }
+  }
+}
+    `;
+
+export function useDeleteExpenseMutation() {
+  return Urql.useMutation<DeleteExpenseMutation, DeleteExpenseMutationVariables>(DeleteExpenseDocument);
+};
+export const EditExpenseDocument = gql`
+    mutation editExpense($id: Float!, $args: ExpenseInput!) {
+  editExpense(id: $id, args: $args) {
+    status
+    error {
+      target
+      message
+    }
+  }
+}
+    `;
+
+export function useEditExpenseMutation() {
+  return Urql.useMutation<EditExpenseMutation, EditExpenseMutationVariables>(EditExpenseDocument);
+};
+export const AddProductDocument = gql`
+    mutation addProduct($args: ProductInput!) {
+  addProduct(args: $args) {
+    ...BooleanResponse
+  }
+}
+    ${BooleanResponseFragmentDoc}`;
+
+export function useAddProductMutation() {
+  return Urql.useMutation<AddProductMutation, AddProductMutationVariables>(AddProductDocument);
+};
+export const EditProductDocument = gql`
+    mutation editProduct($args: ProductEditInput!, $id: Float!) {
+  editProduct(args: $args, id: $id) {
+    ...BooleanResponse
+  }
+}
+    ${BooleanResponseFragmentDoc}`;
+
+export function useEditProductMutation() {
+  return Urql.useMutation<EditProductMutation, EditProductMutationVariables>(EditProductDocument);
+};
+export const DeleteProductDocument = gql`
+    mutation deleteProduct($id: Float!) {
+  deleteProduct(id: $id) {
+    status
+    error {
+      target
+      message
+    }
+  }
+}
+    `;
+
+export function useDeleteProductMutation() {
+  return Urql.useMutation<DeleteProductMutation, DeleteProductMutationVariables>(DeleteProductDocument);
+};
+export const AddPurchaseDocument = gql`
+    mutation addPurchase($args: PurchaseInput!) {
+  addPurchase(args: $args) {
+    ...BooleanResponse
+  }
+}
+    ${BooleanResponseFragmentDoc}`;
+
+export function useAddPurchaseMutation() {
+  return Urql.useMutation<AddPurchaseMutation, AddPurchaseMutationVariables>(AddPurchaseDocument);
+};
+export const EditPurchaseDocument = gql`
+    mutation editPurchase($id: Float!, $args: PurchaseInput!) {
+  editPurchase(id: $id, args: $args) {
+    ...BooleanResponse
+  }
+}
+    ${BooleanResponseFragmentDoc}`;
+
+export function useEditPurchaseMutation() {
+  return Urql.useMutation<EditPurchaseMutation, EditPurchaseMutationVariables>(EditPurchaseDocument);
+};
+export const DeletePurchaseDocument = gql`
+    mutation deletePurchase($id: Float!) {
+  deletePurchase(id: $id) {
+    status
+    error {
+      target
+      message
+    }
+  }
+}
+    `;
+
+export function useDeletePurchaseMutation() {
+  return Urql.useMutation<DeletePurchaseMutation, DeletePurchaseMutationVariables>(DeletePurchaseDocument);
+};
 export const AddRegionDocument = gql`
     mutation addRegion($name: String!) {
   addRegion(name: $name) {
@@ -1561,6 +2134,51 @@ export const DeleteRorDocument = gql`
 export function useDeleteRorMutation() {
   return Urql.useMutation<DeleteRorMutation, DeleteRorMutationVariables>(DeleteRorDocument);
 };
+export const AddSaleDocument = gql`
+    mutation addSale($args: SaleInput!) {
+  addSale(args: $args) {
+    status
+    error {
+      target
+      message
+    }
+  }
+}
+    `;
+
+export function useAddSaleMutation() {
+  return Urql.useMutation<AddSaleMutation, AddSaleMutationVariables>(AddSaleDocument);
+};
+export const EditSaleDocument = gql`
+    mutation editSale($id: Float!, $args: SaleInput!) {
+  editSale(id: $id, args: $args) {
+    status
+    error {
+      target
+      message
+    }
+  }
+}
+    `;
+
+export function useEditSaleMutation() {
+  return Urql.useMutation<EditSaleMutation, EditSaleMutationVariables>(EditSaleDocument);
+};
+export const DeleteSaleDocument = gql`
+    mutation deleteSale($id: Float!) {
+  deleteSale(id: $id) {
+    status
+    error {
+      target
+      message
+    }
+  }
+}
+    `;
+
+export function useDeleteSaleMutation() {
+  return Urql.useMutation<DeleteSaleMutation, DeleteSaleMutationVariables>(DeleteSaleDocument);
+};
 export const ForgotPasswordDocument = gql`
     mutation forgotPassword($email: String!) {
   forgotPassword(email: $email) {
@@ -1614,6 +2232,35 @@ ${ErrorFragmentDoc}`;
 
 export function useResetPasswordMutation() {
   return Urql.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument);
+};
+export const RegisterDocument = gql`
+    mutation register($params: RegisterArgs!) {
+  register(params: $params) {
+    status
+    error {
+      ...Error
+    }
+  }
+}
+    ${ErrorFragmentDoc}`;
+
+export function useRegisterMutation() {
+  return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const EditUserDocument = gql`
+    mutation editUser($id: Float!, $params: EditArgs!) {
+  editUser(id: $id, params: $params) {
+    status
+    error {
+      target
+      message
+    }
+  }
+}
+    `;
+
+export function useEditUserMutation() {
+  return Urql.useMutation<EditUserMutation, EditUserMutationVariables>(EditUserDocument);
 };
 export const GetAccountsDocument = gql`
     query getAccounts($branch: Float) {
@@ -1673,9 +2320,117 @@ export const GetBranchesDocument = gql`
 export function useGetBranchesQuery(options: Omit<Urql.UseQueryArgs<GetBranchesQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetBranchesQuery>({ query: GetBranchesDocument, ...options });
 };
-export const GetRorsDocument = gql`
-    query getRORS($id: Float!) {
-  getRORs(id: $id) {
+export const GetExpensesDocument = gql`
+    query getExpenses {
+  getExpenses {
+    id
+    expenseDate
+    authorizer {
+      id
+      name
+    }
+    title
+    details
+    staff {
+      name
+      id
+    }
+    type
+    ammount
+    account {
+      id
+      name
+    }
+  }
+}
+    `;
+
+export function useGetExpensesQuery(options: Omit<Urql.UseQueryArgs<GetExpensesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetExpensesQuery>({ query: GetExpensesDocument, ...options });
+};
+export const GetExpenseDocument = gql`
+    query getExpense($id: Float!) {
+  getExpense(id: $id) {
+    id
+    expenseDate
+    authorizer {
+      id
+      name
+    }
+    title
+    details
+    staff {
+      name
+      id
+    }
+    asset {
+      id
+      name
+      code
+    }
+    type
+    ammount
+    account {
+      id
+      name
+    }
+    creator {
+      id
+      name
+    }
+  }
+}
+    `;
+
+export function useGetExpenseQuery(options: Omit<Urql.UseQueryArgs<GetExpenseQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetExpenseQuery>({ query: GetExpenseDocument, ...options });
+};
+export const GetProductsDocument = gql`
+    query getProducts {
+  getProducts {
+    id
+    name
+    unit
+    stock
+    pieces
+    pieceUnit
+    pieceStock
+    pieceSellingPrice
+    sellingPrice
+  }
+}
+    `;
+
+export function useGetProductsQuery(options: Omit<Urql.UseQueryArgs<GetProductsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetProductsQuery>({ query: GetProductsDocument, ...options });
+};
+export const GetPurchasesDocument = gql`
+    query getPurchases {
+  getPurchases {
+    id
+    purchaseDate
+    purchasePrice
+    quantity
+    product {
+      id
+      name
+      unit
+    }
+    supplierId
+    sellingPrice
+    pieceSellingPrice
+    receipt
+    accountId
+  }
+}
+    `;
+
+export function useGetPurchasesQuery(options: Omit<Urql.UseQueryArgs<GetPurchasesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetPurchasesQuery>({ query: GetPurchasesDocument, ...options });
+};
+export const GetRoRsDocument = gql`
+    query getRORs {
+  getRORs {
     id
     name
     buying
@@ -1685,8 +2440,8 @@ export const GetRorsDocument = gql`
 }
     `;
 
-export function useGetRorsQuery(options: Omit<Urql.UseQueryArgs<GetRorsQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<GetRorsQuery>({ query: GetRorsDocument, ...options });
+export function useGetRoRsQuery(options: Omit<Urql.UseQueryArgs<GetRoRsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetRoRsQuery>({ query: GetRoRsDocument, ...options });
 };
 export const GetRegionsDocument = gql`
     query getRegions {
@@ -1712,10 +2467,88 @@ export const GetRolesDocument = gql`
 export function useGetRolesQuery(options: Omit<Urql.UseQueryArgs<GetRolesQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetRolesQuery>({ query: GetRolesDocument, ...options });
 };
+export const GetSaleDocument = gql`
+    query getSale($id: Float!) {
+  getSale(id: $id) {
+    id
+    saleDate
+    client {
+      id
+      name
+    }
+    product {
+      id
+      name
+      unit
+      pieceUnit
+      pieces
+      sellingPrice
+      pieceSellingPrice
+    }
+    quantity
+    pieceQuantity
+    sellingPrice
+    pieceSellingPrice
+    payed
+    creator {
+      id
+      name
+    }
+    seller {
+      id
+      name
+    }
+    account {
+      id
+      name
+    }
+  }
+}
+    `;
+
+export function useGetSaleQuery(options: Omit<Urql.UseQueryArgs<GetSaleQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetSaleQuery>({ query: GetSaleDocument, ...options });
+};
+export const GetSalesDocument = gql`
+    query getSales {
+  getSales {
+    id
+    saleDate
+    client {
+      id
+      name
+    }
+    product {
+      id
+      name
+      unit
+      pieceUnit
+    }
+    seller {
+      id
+      name
+    }
+    account {
+      id
+      name
+    }
+    quantity
+    pieceQuantity
+    sellingPrice
+    pieceSellingPrice
+    payed
+  }
+}
+    `;
+
+export function useGetSalesQuery(options: Omit<Urql.UseQueryArgs<GetSalesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetSalesQuery>({ query: GetSalesDocument, ...options });
+};
 export const GetUsersDocument = gql`
-    query getUsers($employee: Boolean) {
-  getUsers(employee: $employee) {
+    query getUsers($roles: [Float!]) {
+  getUsers(roles: $roles) {
     ...Me
+    roleId
     maxCredit
     creditDays
     credit
@@ -1727,6 +2560,117 @@ export const GetUsersDocument = gql`
 
 export function useGetUsersQuery(options: Omit<Urql.UseQueryArgs<GetUsersQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetUsersQuery>({ query: GetUsersDocument, ...options });
+};
+export const GetUserDocument = gql`
+    query getUser($id: Float!) {
+  getUser(id: $id) {
+    ...Me
+    maxCredit
+    creditDays
+    credit
+    balance
+    salary
+    payments {
+      id
+      paymentDate
+      ammount
+      payer {
+        id
+        name
+      }
+      collector {
+        id
+        name
+      }
+    }
+    suppliedPurchases {
+      id
+      product {
+        id
+        name
+        unit
+        pieceUnit
+      }
+      purchaseDate
+      quantity
+      purchasePrice
+    }
+    collections {
+      id
+      paymentDate
+      ammount
+      payer {
+        id
+        name
+      }
+    }
+    incentives {
+      id
+      product {
+        id
+        name
+        unit
+        pieceUnit
+      }
+      quantity
+      incentivePrice
+    }
+    servedSales {
+      id
+      saleDate
+      product {
+        id
+        name
+        unit
+        pieceUnit
+      }
+      quantity
+      pieceQuantity
+      sellingPrice
+      pieceSellingPrice
+      payed
+    }
+    initiatedSales {
+      id
+      saleDate
+      product {
+        id
+        name
+        unit
+        pieceUnit
+      }
+      quantity
+      pieceQuantity
+      sellingPrice
+      pieceSellingPrice
+      payed
+    }
+    authorizedExpenses {
+      id
+      expenseDate
+      ammount
+      title
+      staff {
+        id
+        name
+      }
+    }
+    receivedExpenses {
+      id
+      expenseDate
+      title
+      ammount
+      authorizer {
+        id
+        name
+      }
+    }
+  }
+}
+    ${MeFragmentDoc}`;
+
+export function useGetUserQuery(options: Omit<Urql.UseQueryArgs<GetUserQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetUserQuery>({ query: GetUserDocument, ...options });
 };
 export const MeDocument = gql`
     query Me {

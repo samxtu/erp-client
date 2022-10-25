@@ -59,7 +59,7 @@ const AddOrEditROR = ({ rorToEdit, feedback, reset }: Props) => {
             onSubmit={props.submitForm}
             onReset={props.resetForm}
           >
-            <Segment stacked>
+            <Segment>
               <InputField
                 fluid
                 name="name"

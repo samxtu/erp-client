@@ -16,6 +16,7 @@ import AddEditAssetItem from "../components/AddEditAssetItem";
 import DeleteConfirm from "../components/DeleteConfirm";
 import SearchOrAdd from "../components/SearchOrAdd";
 import Placeholder from "../components/Placeholder";
+import { FcMindMap } from "react-icons/fc";
 
 interface IAssetProps {}
 var loading: boolean = false;
@@ -92,7 +93,9 @@ const Assets: React.FC<IAssetProps> = () => {
           })
         }
         title="Asset"
-      />
+      >
+        <FcMindMap style={{fontSize: "60px", padding: "0px", margin:"0px"}} />
+      </SearchOrAdd>
       {error === "" ? null : (
         <Message negative>
           <Message.Header>{error}</Message.Header>
@@ -136,7 +139,7 @@ const Assets: React.FC<IAssetProps> = () => {
               data?.getAssets &&
               data.getAssets.map((r) => (
                 <Grid.Row key={JSON.stringify(r)}>
-                  <Grid.Column>{r.name}</Grid.Column>
+                  <Grid.Column>{r.name + r.id} </Grid.Column>
                   <Grid.Column>{r.code}</Grid.Column>
                   <Grid.Column>
                     <Label
